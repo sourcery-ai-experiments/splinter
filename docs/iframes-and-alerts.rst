@@ -42,7 +42,7 @@ You can deal with alerts and prompts using the ``get_alert`` method.
     alert.dismiss()
 
 
-In case of prompts, you can answer it using the ``fill_with`` method.
+In case of prompts, you can answer it using the ``send_keys`` method.
 
 .. highlight:: python
 
@@ -50,12 +50,12 @@ In case of prompts, you can answer it using the ``fill_with`` method.
 
     prompt = browser.get_alert()
     prompt.text
-    prompt.fill_with('text')
+    prompt.send_keys('text')
     prompt.accept()
     prompt.dismiss()
 
 
-You can use the ``with`` statement to interacte with both alerts and prompts too.
+You can use the ``with`` statement to interact with both alerts and prompts too.
 
 .. highlight:: python
 
