@@ -32,7 +32,7 @@ else:
 
 # Patch contextmanager onto Selenium's Alert
 def alert_enter(self):
-    pass
+    return self
 
 def alert_exit(self, type, value, traceback):
     pass
