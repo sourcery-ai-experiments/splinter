@@ -11,8 +11,8 @@ import tempfile
 import time
 from contextlib import contextmanager
 
-from selenium.webdriver.common.alert import Alert
 from selenium.common.exceptions import NoSuchElementException, WebDriverException, StaleElementReferenceException
+from selenium.webdriver.common import alert
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
@@ -30,15 +30,19 @@ else:
     _meth_func = "im_func"
     _func_name = "func_name"
 
-# Patch contextmanager onto Selenium's Alert
-def alert_enter(self):
-    return self
 
-def alert_exit(self, type, value, traceback):
-    pass
+class ContextManagerAlert(object):
+    """Patch contextmanager functionality onto Selenium's Alert."""
+    def __enter__(self):
+        return self
 
-Alert.__enter__ = alert_enter
-Alert.__exit__ = alert_exit
+    def __exit__(self, type, value, traceback):
+        pass
+
+    def fill_with(self, text):
+        return self.send_keys(text)
+
+alert.Alert = ContextManagerAlert
 
 
 class switch_window:
