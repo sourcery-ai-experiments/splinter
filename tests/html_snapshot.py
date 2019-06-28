@@ -1,3 +1,4 @@
+import io
 import tempfile
 
 
@@ -22,6 +23,6 @@ class HTMLSnapshotTest(object):
         html = self.browser.html
 
         filename = self.browser.html_snapshot()
-        with open(filename, 'r') as f:
+        with io.open(filename, 'r', encoding='utf-8') as f:
             snapshot = f.read()
         self.assertEqual(snapshot, html)
