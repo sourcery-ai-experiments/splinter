@@ -5,8 +5,9 @@
 # license that can be found in the LICENSE file.
 
 import os
-import unittest
 import sys
+
+import pytest
 
 from splinter import Browser
 from .base import BaseBrowserTests
@@ -14,7 +15,7 @@ from .fake_webapp import EXAMPLE_APP
 from .is_element_present_nojs import IsElementPresentNoJSTest
 
 
-@unittest.skipIf(
+@pytest.mark.skipif(
     sys.version_info[0] > 2,
     "zope.testbrowser is not currently compatible with Python 3",
 )

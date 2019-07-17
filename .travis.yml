@@ -11,38 +11,37 @@ before_install:
   - mkdir geckodriver
   - tar -xzf geckodriver-v0.23.0-linux64.tar.gz -C geckodriver
   - export PATH=$PATH:$PWD/geckodriver
-  - ./travis-install.bash
+  - FILE=`mktemp`; wget https://chromedriver.storage.googleapis.com/76.0.3809.68/chromedriver_linux64.zip -qO $FILE && unzip $FILE chromedriver -d ~; rm $FILE; chmod 777 ~/chromedriver;
+  - export PATH=$HOME:$PATH
+  - wget https://goo.gl/s4o9Vx -O selenium-server.jar
+  - java -jar selenium-server.jar > /dev/null 2>&1 &
+  - sleep 1
 language: python
 addons:
   chrome: stable
   firefox: "62.0"
-python:
-  - "2.7"
-  - "3.6"
-  - "3.7"
-  - "3.8-dev"
-env:
-  - DRIVER=tests/test_flaskclient.py
-  - DRIVER=tests/test_webdriver_remote.py
-  - DRIVER=tests/test_webdriver_firefox.py
-  - DRIVER=tests/test_webdriver_chrome.py
-  - DRIVER=tests/test_browser.py
-  - DRIVER=tests/test_element_list.py
-  - DRIVER=tests/test_request_handler.py
 matrix:
   include:
     - python: 2.7
       env:
-        - DJANGO_VERSION=1.7.11 DRIVER=tests/test_djangoclient.py
-        - DRIVER=tests/test_zopetestbrowser.py
+        - DJANGO_VERSION=1.7.11
+        - TOX_ENV=py27
     - python: 3.6
-      env: DJANGO_VERSION=2.0.6 DRIVER=tests/test_djangoclient.py
+      env:
+        - DJANGO_VERSION=2.0.6
+        - TOX_ENV=py36
     - python: 3.7
-      env: DJANGO_VERSION=2.0.6 DRIVER=tests/test_djangoclient.py
+      env:
+        - DJANGO_VERSION=2.0.6
+        - TOX_ENV=py37
     - python: 3.8-dev
-      env: DJANGO_VERSION=2.0.6 DRIVER=tests/test_djangoclient.py
+      env:
+        - DJANGO_VERSION=2.0.6
+        - TOX_ENV=py38
 install:
   - export PATH=$HOME:$PATH
   - make dependencies
-script: ./run_tests.py -w ${DRIVER}
+  - pip install tox
+  - pip install -q Django==$DJANGO_VERSION
+script: tox -e $TOX_ENV
 dist: xenial
