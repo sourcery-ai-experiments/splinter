@@ -10,6 +10,7 @@ import unittest
 from splinter import Browser
 from .fake_webapp import EXAMPLE_APP
 from .base import WebDriverTests
+from selenium import webdriver
 from selenium.common.exceptions import WebDriverException
 
 
@@ -24,7 +25,10 @@ def chrome_installed():
 class ChromeBrowserTest(WebDriverTests, unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.browser = Browser("chrome", headless=True)
+        options = webdriver.chrome.options.Options()
+        options.add_argument("--disable-dev-shm-usage")
+
+        cls.browser = Browser("chrome", headless=True, options=options)
 
     @classmethod
     def tearDownClass(cls):
@@ -58,7 +62,10 @@ class ChromeBrowserTest(WebDriverTests, unittest.TestCase):
 class ChromeBrowserFullscreenTest(WebDriverTests, unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.browser = Browser("chrome", fullscreen=True, headless=True)
+        options = webdriver.chrome.options.Options()
+        options.add_argument("--disable-dev-shm-usage")
+
+        cls.browser = Browser("chrome", fullscreen=True, headless=True, options=options)
 
     @classmethod
     def tearDownClass(cls):

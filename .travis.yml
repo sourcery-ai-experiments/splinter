@@ -7,12 +7,17 @@ services:
   - xvfb
 before_install:
   - export DISPLAY=:99.0
+  # Get Geckodriver
   - wget https://github.com/mozilla/geckodriver/releases/download/v0.23.0/geckodriver-v0.23.0-linux64.tar.gz
   - mkdir geckodriver
   - tar -xzf geckodriver-v0.23.0-linux64.tar.gz -C geckodriver
   - export PATH=$PATH:$PWD/geckodriver
-  - FILE=`mktemp`; wget https://chromedriver.storage.googleapis.com/76.0.3809.68/chromedriver_linux64.zip -qO $FILE && unzip $FILE chromedriver -d ~; rm $FILE; chmod 777 ~/chromedriver;
+  # Get Chromedriver
+  - CHROMEVERSION=$(google-chrome --version | grep -Eo "([0-9]{1,3})" | head -1)
+  - LATESTRELEASE=$(curl https://chromedriver.storage.googleapis.com/LATEST_RELEASE_${CHROMEVERSION})
+  - FILE=`mktemp`; wget https://chromedriver.storage.googleapis.com/${LATESTRELEASE}/chromedriver_linux64.zip -qO $FILE && unzip $FILE chromedriver -d ~; rm $FILE; chmod 777 ~/chromedriver;
   - export PATH=$HOME:$PATH
+  # Start Selenium
   - wget https://goo.gl/s4o9Vx -O selenium-server.jar
   - java -jar selenium-server.jar > /dev/null 2>&1 &
   - sleep 1

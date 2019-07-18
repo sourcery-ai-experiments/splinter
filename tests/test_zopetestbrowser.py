@@ -6,6 +6,7 @@
 
 import os
 import sys
+import unittest
 
 import pytest
 
@@ -17,7 +18,7 @@ from .is_element_present_nojs import IsElementPresentNoJSTest
 
 @pytest.mark.skipif(
     sys.version_info[0] > 2,
-    "zope.testbrowser is not currently compatible with Python 3",
+    reason="zope.testbrowser is not currently compatible with Python 3",
 )
 class ZopeTestBrowserDriverTest(
     BaseBrowserTests, IsElementPresentNoJSTest, unittest.TestCase
