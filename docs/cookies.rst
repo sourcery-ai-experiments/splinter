@@ -19,7 +19,17 @@ Add a cookie
 
 .. code-block:: python
 
-    browser.cookies.add({'cookie_name': 'cookie_value'})
+    browser.cookies.add('cookie_name', 'cookie_value')
+
+Extra Arguments
+~~~~~~~~~~~~~~~
+
+Each driver accepts various parameters when creating cookies.
+These can be used with browser.cookies.add as extra arguments.
+For example, WebDriver can use `path`, `domain`, `secure`, and `expiry`:
+
+::
+    browser.cookies.add('cookie_name', 'cookie_value', path='/cookiePath')
 
 Retrieve all cookies
 --------------------
