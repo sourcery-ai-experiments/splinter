@@ -29,6 +29,7 @@ class LxmlDriver(ElementPresentMixIn, DriverAPI):
         self.wait_time = wait_time
         self._history = []
         self._last_urls = []
+        self._last_url_index = -1
         self._forms = {}
 
         self.links = FindLinks(self)
@@ -45,6 +46,7 @@ class LxmlDriver(ElementPresentMixIn, DriverAPI):
         )
 
     def visit(self, url):
+        self._last_url_index += 1
         self._do_method("get", url)
 
     def serialize(self, form):
@@ -94,14 +96,27 @@ class LxmlDriver(ElementPresentMixIn, DriverAPI):
         )
 
     def back(self):
-        self._last_urls.insert(0, self.url)
-        self.visit(self._last_urls[1])
+        """Visit the previous page.
+        Does nothing if there is no previous page to visit.
+        """
+        if self._last_url_index != 0:
+            self._last_url_index -= 1
+            self.visit(self._last_urls[self._last_url_index])
+            # Don't record back movement as a visit
+            self._last_url_index -= 1
+            self._last_urls.pop()
+
 
     def forward(self):
-        try:
-            self.visit(self._last_urls.pop())
-        except IndexError:
-            pass
+        """Visit the next page.
+        Does nothing if there is no next page to visit.
+        """
+        if self._last_url_index != len(self._last_urls) -1:
+            self._last_url_index += 1
+            self.visit(self._last_urls[self._last_url_index])
+            # Don't record forward movement as a visit
+            self._last_url_index -= 1
+            self._last_urls.pop()
 
     def reload(self):
         self.visit(self._url)

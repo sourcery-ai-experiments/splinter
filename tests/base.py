@@ -4,6 +4,7 @@
 # Use of this source code is governed by a BSD-style
 # license that can be found in the LICENSE file.
 import time
+from six.moves.urllib import parse
 
 import pytest
 from selenium import webdriver
@@ -80,8 +81,10 @@ class BaseBrowserTests(
 ):
     EXAMPLE_APP = EXAMPLE_APP
 
-    def get_browser(self, browser_name, **kwargs):
-        return get_browser(browser_name, **kwargs)
+    def get_new_browser(self, **kwargs):
+        """Get a new browser instance."""
+        driver_name = self.browser.driver_name.lower()
+        return get_browser(driver_name, **kwargs)
 
     def test_can_open_page(self):
         """should be able to visit, get title and quit"""
@@ -97,12 +100,20 @@ class BaseBrowserTests(
 
     def test_can_forward_on_history(self):
         """should be able to forward history"""
-        self.browser.visit(EXAMPLE_APP)
+        browser = self.get_new_browser()
+        browser.visit(EXAMPLE_APP)
+
         next_url = "{}iframe".format(EXAMPLE_APP)
-        self.browser.visit(next_url)
-        self.browser.back()
-        self.browser.forward()
-        self.assertEqual(next_url, self.browser.url)
+        browser.visit(next_url)
+        browser.back()
+
+        assert EXAMPLE_APP == browser.url
+
+        browser.forward()
+
+        assert next_url == browser.url
+
+        browser.quit()
 
     def test_should_have_html(self):
         self.browser.visit(EXAMPLE_APP)
