@@ -95,6 +95,10 @@ class FindElementsTest(object):
         link = self.browser.find_link_by_partial_text("Link with a span")[0]
         self.assertEqual("http://localhost:5000/clickme", link["href"])
 
+    def test_finding_links_by_nested_split_partial_text_3(self):
+        link = self.browser.find_link_by_partial_text("Add empl")[0]
+        self.assertEqual("http://localhost:5000/clickme", link["href"])
+
 
     def test_finding_last_element_by_css(self):
         value = self.browser.find_by_css("h1").last.value
