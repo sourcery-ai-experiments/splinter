@@ -7,6 +7,9 @@
 from selenium.webdriver import Remote
 from selenium.webdriver.remote import remote_connection
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+from selenium.webdriver.chrome.options import Options as ChromeOptions
+from selenium.webdriver.firefox.options import Options as FirefoxOptions
+
 from splinter.driver.webdriver import (
     BaseWebDriver,
     WebDriverElement,
@@ -29,6 +32,7 @@ class WebDriver(BaseWebDriver):
         browser="firefox",
         wait_time=2,
         command_executor=DEFAULT_URL,
+        headless=False,
         **kwargs
     ):
         browser_name = browser.upper()
@@ -43,6 +47,21 @@ class WebDriver(BaseWebDriver):
             caps.update(kwargs['desired_capabilities'])
 
         kwargs['desired_capabilities'] = caps
+
+        if headless:
+            if browser_name == 'CHROME':
+                options = ChromeOptions() if kwargs.get('options') is None else options
+                options.add_argument("--headless")
+                options.add_argument("--disable-gpu")
+
+            elif browser_name == 'FIREFOX':
+                options = FirefoxOptions() if kwargs.get('options') is None else options
+                options.add_argument("--headless")
+
+            else:
+                raise ValueError('{} does not support the headless parameter.')
+
+            kwargs['desired_capabilities']['options'] = options
 
         self.driver = Remote(command_executor, **kwargs)
 
