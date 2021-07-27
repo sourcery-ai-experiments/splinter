@@ -290,6 +290,13 @@ class BaseWebDriver(DriverAPI):
 
         self.links = FindLinks(self)
 
+        self.default_selector = 'name'
+        self.default_selectors = {
+            'name': self.find_by_name,
+            'xpath': self.find_by_xpath,
+            'css': self.find_by_css,
+        }
+
     def __enter__(self):
         return self
 
@@ -593,7 +600,8 @@ class BaseWebDriver(DriverAPI):
         )
 
     def fill(self, name, value):
-        field = self.find_by_name(name).first
+        selector = self.default_selectors[self.default_selector]
+        field = selector(name).first
         field.value = value
 
     attach_file = fill
@@ -602,7 +610,8 @@ class BaseWebDriver(DriverAPI):
         form = None
 
         if name is not None:
-            form = self.find_by_name(name)
+            selector = self.default_selectors[self.default_selector]
+            form = selector(name)
         if form_id is not None:
             form = self.find_by_id(form_id)
 
@@ -636,23 +645,38 @@ class BaseWebDriver(DriverAPI):
                     raise ElementDoesNotExist(e)
 
     def type(self, name, value, slowly=False):
-        element = self.find_by_name(name).first._element
+        selector = self.default_selectors[self.default_selector]
+        element = selector(name).first._element
         if slowly:
             return TypeIterator(element, value)
         element.send_keys(value)
         return value
 
     def choose(self, name, value):
-        fields = self.find_by_name(name)
+        selector = self.default_selectors[self.default_selector]
+        field = selector(name)
         for field in fields:
             if field.value == value:
                 field.click()
 
     def check(self, name):
-        self.find_by_name(name).first.check()
+        selector = self.default_selectors[self.default_selector]
+        selector(name).first.check()
 
     def uncheck(self, name):
-        self.find_by_name(name).first.uncheck()
+        selector = self.default_selectors[self.default_selector]
+        selector(name).first.uncheck()
+
+    def select(self, name, value):
+        selector = self.default_selectors[self.default_selector]
+        parent = selector(name).first
+        child = parent.find_by_xpath('./option[@value="{}"]'.format(value))
+        child.first._element.click()
+
+    def select_by_text(self, name, text):
+        self.find_by_xpath(
+            '//select[@name="%s"]/option[text()="%s"]' % (name, text)
+        ).first._element.click()
 
     def screenshot(self, name="", suffix=".png", full=False):
 
@@ -672,16 +696,6 @@ class BaseWebDriver(DriverAPI):
             self.recover_screen(ori_window_size)
 
         return filename
-
-    def select(self, name, value):
-        self.find_by_xpath(
-            '//select[@name="%s"]//option[@value="%s"]' % (name, value)
-        ).first._element.click()
-
-    def select_by_text(self, name, text):
-        self.find_by_xpath(
-            '//select[@name="%s"]/option[text()="%s"]' % (name, text)
-        ).first._element.click()
 
     def quit(self):
         try:
