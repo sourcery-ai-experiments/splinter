@@ -22,18 +22,16 @@ You can install all of them in one step by running:
 
     pip install splinter[django]
 
-Using django client
--------------------
+Usage
+-----
 
-To use the ``django`` driver, all you need to do is pass the string ``django`` when you create
+To use Django, use the string ``django`` when you create
 the ``Browser`` instance:
 
 .. code-block:: python
 
     from splinter import Browser
     browser = Browser('django')
-
-**Note:** if you don't provide any driver to ``Browser`` function, ``firefox`` will be used.
 
 API docs
 --------

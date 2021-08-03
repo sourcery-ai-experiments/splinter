@@ -22,10 +22,10 @@ You can install all of them in one step by running:
 
     pip install splinter[zope.testbrowser]
 
-Using zope.testbrowser
-----------------------
+Usage
+-----
 
-To use the ``zope.testbrowser`` driver, all you need to do is pass the string ``zope.testbrowser`` when you create
+To use the ``zope.testbrowser`` driver, use the string ``zope.testbrowser`` when you create
 the ``Browser`` instance:
 
 .. code-block:: python

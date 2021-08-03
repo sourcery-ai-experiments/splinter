@@ -10,78 +10,51 @@
 Chrome WebDriver
 ++++++++++++++++
 
-Chrome WebDriver is provided by Selenium. To use it, you need to install Selenium via pip:
+Installation
+------------
 
-.. code-block:: console
+Chrome automation is provided via Selenium WebDriver.
+To use it, the following applications are required:
 
-    [sudo] pip install selenium
+- `Google Chrome <http://google.com/chrome>`_
+- `ChromeDriver <https://chromedriver.chromium.org/>`_
 
-The following applications are also required:
+Google Chrome
++++++++++++++
 
-  - `Google Chrome <http://google.com/chrome>`_
-  - `ChromeDriver <https://chromedriver.chromium.org/>`_
+Download and install the application from `<http://google.com/chrome>`_
 
-Chromedriver must also be available on your operating system's `PATH` environment variable.
+ChromeDriver
+++++++++++++
 
-Setting up Chrome WebDriver
----------------------------
+Download the application from `<https://chromedriver.chromium.org/>`_,
+select the correct version for your operating system,
+and place it in a directory that is in your operating system's ``PATH``.
 
-In order to use `Google Chrome <http://google.com/chrome>`_ with Splinter, since we're using Selenium 2.3.x,
-you need to setup Chrome webdriver properly.
-
+Alternatively, use a package manager:
 
 Mac OS X
---------
+========
 
-The recommended way is by using `Homebrew <http://mxcl.github.com/homebrew/>`_:
+Via `Homebrew <http://mxcl.github.com/homebrew/>`_:
 
 .. code-block:: console
 
     brew install chromedriver
 
+Windows
+=======
 
-Linux
------
-
-Go to the `download page on the Chromium project
-<https://sites.google.com/a/chromium.org/chromedriver/downloads>`_ and choose
-the correct version for your Linux installation. Then extract the downloaded file in a
-directory in the ``PATH`` (e.g. ``/usr/bin``). You can also extract it to any
-directory and add that directory to the ``PATH``:
-
-Linux 64bits
-++++++++++++
+Via `Chocolatey <https://chocolatey.org/>`_:
 
 .. code-block:: console
 
-    cd $HOME/Downloads
-    wget https://chromedriver.storage.googleapis.com/2.41/chromedriver_linux64.zip
-    unzip chromedriver_linux64.zip
+    choco install chromedriver
 
-    mkdir -p $HOME/bin
-    mv chromedriver $HOME/bin
-    echo "export PATH=$PATH:$HOME/bin" >> $HOME/.bash_profile
+Usage
+-----
 
-
-Windows
--------
-
-    **Note:** We don't provide official support for Windows, but you can try it by yourself.
-
-All you need to do is go to `download page on Selenium project <https://sites.google.com/a/chromium.org/chromedriver/downloads>`_ and choose
-"ChromeDriver server for win". Your browser will download a zip file, extract it and add the ``.exe`` file to your PATH.
-
-If you don't know how to add an executable to the PATH on Windows, check these link out:
-
-* `Environment variables <http://msdn.microsoft.com/en-us/library/ms682653.aspx>`_
-* `How to manage environment variables in Windows XP <http://support.microsoft.com/kb/310519>`_
-* `How to manage environment variables in Windows 8 & 10 <https://www.computerhope.com/issues/ch000549.htm>`_
-
-
-Using Chrome WebDriver
-----------------------
-
-To use the Chrome driver, all you need to do is pass the string ``chrome`` when you create
+To use Chrome, use the string ``chrome`` when you create
 the ``Browser`` instance:
 
 .. code-block:: python
@@ -89,7 +62,8 @@ the ``Browser`` instance:
     from splinter import Browser
     browser = Browser('chrome')
 
-**Note:** if you don't provide any driver to the ``Browser`` function, ``firefox`` will be used.
+Headless mode
++++++++++++++
 
 **Note:** if you have trouble with ``$HOME/.bash_profile``, you can try ``$HOME/.bashrc``.
 
@@ -121,8 +95,8 @@ when creating a Browser instance.
 Emulation mode
 ++++++++++++++
 
-Chrome options can be passed to customize Chrome's behaviour; it is then possible to leverage the
-experimental emulation mode.
+Since Chrome options can be passed to customize Chrome's behaviour;
+it's possible to leverage the experimental emulation mode.
 
 .. code-block:: python
 
@@ -131,12 +105,27 @@ experimental emulation mode.
 
     mobile_emulation = {"deviceName": "Google Nexus 5"}
     chrome_options = webdriver.ChromeOptions()
-    chrome_options.add_experimental_option("mobileEmulation",
-                                           mobile_emulation)
+    chrome_options.add_experimental_option(
+        "mobileEmulation", mobile_emulation)
     browser = Browser('chrome', options=chrome_options)
 
 
-refer to `chrome driver documentation <https://sites.google.com/a/chromium.org/chromedriver/mobile-emulation>`_
+See: `chrome driver documentation <https://sites.google.com/a/chromium.org/chromedriver/mobile-emulation>`_
+
+
+Custom executable path
+++++++++++++++++++++++
+
+WebDriver can also use a version of Chrome installed at a custom path.
+To do this, pass the executable path as a dictionary to the `**kwargs` argument.
+The dictionary should be set up with `executable_path` as the key and the value set to the path to the executable file.
+
+.. code-block:: python
+
+    from splinter import Browser
+    executable_path = {'executable_path': '</path/to/chrome>'}
+
+    browser = Browser('chrome', **executable_path)
 
 Custom executable path
 ++++++++++++++++++++++

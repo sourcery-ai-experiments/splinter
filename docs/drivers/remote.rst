@@ -18,16 +18,17 @@ Selenium via pip:
 
     [sudo] pip install selenium
 
-Setting up the Remote WebDriver
--------------------------------
+Installation
+------------
 
 To use Remote WebDriver, you need to have access to a Selenium remote
-WebDriver server. Setting up one of these servers is beyond the scope of this
-document. However, some companies provide access to a `Selenium Grid`_ as a service.
+WebDriver server.
+Setting up one of these servers is beyond the scope of this document.
+However, some companies provide access to a `Selenium Grid`_ as a service.
 
 
-Using Remote WebDriver
-----------------------
+Usage
+-----
 
 To use the Remote WebDriver, use ``driver_name="remote"`` when you create the ``Browser`` instance.
 
