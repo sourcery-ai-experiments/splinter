@@ -9,6 +9,7 @@ from __future__ import unicode_literals
 import mimetypes
 import re
 import time
+import warnings
 
 import lxml.html
 from lxml.cssselect import CSSSelector
@@ -147,6 +148,15 @@ class ZopeTestBrowser(ElementPresentMixIn, DriverAPI):
     def get_control(self, xpath_element):
         return xpath_element
 
+    def _find_links_by_xpath(self, xpath):
+        html = self.htmltree
+        links = html.xpath(xpath)
+        return ElementList(
+            [ZopeTestBrowserLinkElement(link, self) for link in links],
+            find_by="xpath",
+            query=xpath,
+        )
+
     def find_by_xpath(self, xpath, original_find=None, original_query=None):
         html = self.htmltree
 
@@ -217,18 +227,36 @@ class ZopeTestBrowser(ElementPresentMixIn, DriverAPI):
         )
 
     def find_link_by_text(self, text):
-        return self._find_links_by_xpath("//a[text()='%s']" % text)
+        warnings.warn(
+            'browser.find_link_by_text is deprecated.'
+            ' Use browser.links.find_by_text instead.',
+            FutureWarning,
+        )
+        return self.links.find_by_text(text)
 
     def find_link_by_href(self, href):
-        return self._find_links_by_xpath("//a[@href='%s']" % href)
+        warnings.warn(
+            'browser.find_link_by_href is deprecated.'
+            ' Use browser.links.find_by_href instead.',
+            FutureWarning,
+        )
+        return self.links.find_by_href(href)
 
     def find_link_by_partial_href(self, partial_href):
-        return self._find_links_by_xpath("//a[contains(@href, '%s')]" % partial_href)
+        warnings.warn(
+            'browser.find_link_by_partial_href is deprecated.'
+            ' Use browser.links.find_by_partial_href instead.',
+            FutureWarning,
+        )
+        return self.links.find_by_partial_href(partial_href)
 
     def find_link_by_partial_text(self, partial_text):
-        return self._find_links_by_xpath(
-            "//a[contains(normalize-space(.), '%s')]" % partial_text
+        warnings.warn(
+            'browser.find_link_by_partial_text is deprecated.'
+            ' Use browser.links.find_by_partial_text instead.',
+            FutureWarning,
         )
+        return self.links.find_by_partial_text(partial_text)
 
     def fill(self, name, value):
         self.find_by_name(name=name).first._control.value = value
@@ -277,15 +305,6 @@ class ZopeTestBrowser(ElementPresentMixIn, DriverAPI):
         content_type, _ = mimetypes.guess_type(file_path)
         with open(file_path, 'rb') as f:
             control.add_file(f, content_type, filename)
-
-    def _find_links_by_xpath(self, xpath):
-        html = self.htmltree
-        links = html.xpath(xpath)
-        return ElementList(
-            [ZopeTestBrowserLinkElement(link, self) for link in links],
-            find_by="xpath",
-            query=xpath,
-        )
 
     def select(self, name, value):
         self.find_by_name(name).first._control.value = [value]
