@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+
+
 class FindLinks(object):
     """Contains methods for finding links in a parent.
 
@@ -8,6 +11,7 @@ class FindLinks(object):
         browser.links.find_by_href('foobar')
 
     """
+
     def __init__(self, parent):
         self.parent = parent
 
