@@ -13,9 +13,7 @@ from zope.testbrowser.browser import Browser
 from zope.testbrowser.browser import ListControl
 
 from splinter.config import Config
-from splinter.cookie_manager import CookieManagerAPI
-from splinter.driver import DriverAPI
-from splinter.driver import ElementAPI
+from splinter.abc import CookieManagerAPI, DriverAPI, ElementAPI
 from splinter.driver.element_present import ElementPresentMixIn
 from splinter.driver.find_links import FindLinks
 from splinter.driver.xpath_utils import _concat_xpath_from_str

@@ -1,11 +1,11 @@
 # Copyright 2012 splinter authors. All rights reserved.
 # Use of this source code is governed by a BSD-style
 # license that can be found in the LICENSE file.
-from splinter.meta import InheritedDocs
+from abc import ABC, abstractmethod
 
 
-class CookieManagerAPI(InheritedDocs("_CookieManagerAPI", (object,), {})):  # type: ignore
-    """An API that specifies how a splinter driver deals with cookies.
+class CookieManagerAPI(ABC):
+    """Specification for how a Splinter driver handles cookies.
 
     You can add cookies using the :meth:`add <CookieManagerAPI.add>` method,
     and remove one or all cookies using
@@ -21,6 +21,7 @@ class CookieManagerAPI(InheritedDocs("_CookieManagerAPI", (object,), {})):  # ty
     def __init__(self, driver) -> None:
         self.driver = driver
 
+    @abstractmethod
     def add(self, cookie, **kwargs) -> None:
         """Add a cookie.
 
@@ -36,6 +37,7 @@ class CookieManagerAPI(InheritedDocs("_CookieManagerAPI", (object,), {})):  # ty
         """
         raise NotImplementedError
 
+    @abstractmethod
     def delete(self, *cookies: str) -> None:
         """Delete one or more cookies.
 
@@ -52,14 +54,16 @@ class CookieManagerAPI(InheritedDocs("_CookieManagerAPI", (object,), {})):  # ty
         """
         raise NotImplementedError
 
+    @abstractmethod
     def delete_all(self) -> None:
         """Delete all cookies."""
         raise NotImplementedError
 
-    def all(self, verbose: bool = False):  # NOQA: A003
+    @abstractmethod
+    def all(self, verbose: bool = False):
         """Get all of the cookies.
 
-            **Note:** If you're using any webdriver and want more info about
+            **Note:** If you're using any WebDriver and want more info about
             the cookie, set the `verbose` parameter to `True` (in other
             drivers, it won't make any difference). In this case, this method
             will return a list of dicts, each with one cookie's info.
@@ -68,15 +72,24 @@ class CookieManagerAPI(InheritedDocs("_CookieManagerAPI", (object,), {})):  # ty
 
             >>> cookie_manager.add({'name': 'Tony'})
             >>> cookie_manager.all()
-            [{'name': 'Tony'}]
+            >>> [{'name': 'Tony'}]
 
         Returns:
             All the available cookies.
         """
         raise NotImplementedError
 
-    def __getitem__(self, item):
+    @abstractmethod
+    def __contains__(self, key: str):
+        """Check membership of a cookie by the cookie's name."""
         raise NotImplementedError
 
-    def __eq__(self, other_object) -> bool:
+    @abstractmethod
+    def __getitem__(self, item: str):
+        """Get a cookie by name."""
+        raise NotImplementedError
+
+    @abstractmethod
+    def __eq__(self, other) -> bool:
+        """Check for equality between two cookies."""
         raise NotImplementedError

@@ -12,8 +12,7 @@ import lxml.html
 from lxml.cssselect import CSSSelector
 
 from splinter.config import Config
-from splinter.driver import DriverAPI
-from splinter.driver import ElementAPI
+from splinter.abc import DriverAPI, ElementAPI
 from splinter.driver.element_present import ElementPresentMixIn
 from splinter.driver.find_links import FindLinks
 from splinter.driver.xpath_utils import _concat_xpath_from_str

@@ -8,7 +8,7 @@ class ElementList:
     """Collection of elements.
 
     Each member of the collection is by default an instance
-    of :class:`ElementAPI <splinter.driver.ElementAPI>`.
+    of :class:`ElementAPI <splinter.abc.ElementAPI>`.
 
     Beyond the traditional list methods, ``ElementList`` provides some
     other methods, listed below.
