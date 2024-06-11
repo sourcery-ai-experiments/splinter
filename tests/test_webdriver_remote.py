@@ -7,6 +7,7 @@ from urllib.request import urlopen
 import pytest
 
 from .base import WebDriverTests
+from .keyboard import KeyboardTest
 from .fake_webapp import EXAMPLE_APP
 from splinter import Browser
 
@@ -21,7 +22,7 @@ def selenium_server_is_running():
     return "WebDriver Hub" in page_contents
 
 
-class TestRemoteBrowserFirefox(WebDriverTests):
+class TestRemoteBrowserFirefox(WebDriverTests, KeyboardTest):
     @pytest.fixture(autouse=True, scope="class")
     def setup_browser(self, request):
         request.cls.browser = Browser("remote", browser="firefox")
@@ -41,7 +42,7 @@ class TestRemoteBrowserFirefox(WebDriverTests):
         pass
 
 
-class TestRemoteBrowserChrome(WebDriverTests):
+class TestRemoteBrowserChrome(WebDriverTests, KeyboardTest):
     @pytest.fixture(autouse=True, scope="class")
     def setup_browser(self, request):
         request.cls.browser = Browser("remote", browser="chrome")
@@ -62,7 +63,7 @@ class TestRemoteBrowserChrome(WebDriverTests):
 
 
 @pytest.mark.macos
-class TestRemoteBrowserSafari(WebDriverTests):
+class TestRemoteBrowserSafari(WebDriverTests, KeyboardTest):
     @pytest.fixture(autouse=True, scope="class")
     def setup_browser(self, request):
         # test with statement. It can't be used as simple test

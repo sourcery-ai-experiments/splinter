@@ -5,12 +5,13 @@ import pytest
 
 from .base import get_browser
 from .base import WebDriverTests
+from .keyboard import KeyboardTest
 from .fake_webapp import EXAMPLE_APP
 
 from splinter.config import Config
 
 
-class TestChromeBrowser(WebDriverTests):
+class TestChromeBrowser(WebDriverTests, KeyboardTest):
     @pytest.fixture(autouse=True, scope="class")
     def setup_browser(self, request):
         config = Config(fullscreen=False)
@@ -23,7 +24,7 @@ class TestChromeBrowser(WebDriverTests):
         self.browser.visit(EXAMPLE_APP)
 
 
-class TestChromeBrowserFullscreen(WebDriverTests):
+class TestChromeBrowserFullscreen(WebDriverTests, KeyboardTest):
     @pytest.fixture(autouse=True, scope="class")
     def setup_browser(self, request):
         config = Config(fullscreen=True)
