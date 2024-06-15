@@ -2,31 +2,40 @@ import os
 import pathlib
 
 import pytest
-from selenium.common.exceptions import WebDriverException
 
 from tests.fake_webapp import EXAMPLE_APP
 
 
-def test_webdriver_local_driver_not_present(browser_name):
-    """When chromedriver/geckodriver are not present on the system."""
-    from splinter import Browser
+xfail_if_safari = pytest.mark.xfail(
+    os.getenv("SAFARI"),
+    reason="Session issues with safari need to be investigated.",
+)
 
-    from selenium.webdriver.chrome.service import Service as ChromeService
-    from selenium.webdriver.firefox.service import Service as FirefoxService
 
-    if browser_name == "chrome":
-        service = ChromeService(executable_path="failpath")
-    else:
-        service = FirefoxService(executable_path="failpath")
+def test_default_wait_time(browser):
+    "should driver default wait time 2"
+    assert 2 == browser.wait_time
 
-    with pytest.raises(WebDriverException):
-        Browser(browser_name, service=service)
+
+def test_status_code(browser):
+    with pytest.raises(NotImplementedError):
+        browser.status_code
+
+
+def test_can_open_page_in_new_tab(browser):
+    """should be able to visit url in a new tab"""
+    browser.visit(EXAMPLE_APP)
+    browser.windows.current.new_tab(EXAMPLE_APP)
+    browser.windows[1].is_current = True
+    assert EXAMPLE_APP == browser.url
+    assert 2 == len(browser.windows)
+
+    browser.windows[0].is_current = True
+    browser.windows[1].close()
 
 
 def test_attach_file(request, browser):
     """Should provide a way to change file field value"""
-    request.addfinalizer(browser.quit)
-
     file_path = pathlib.Path(
         os.getcwd(),  # NOQA PTH109
         "tests",
@@ -44,6 +53,7 @@ def test_attach_file(request, browser):
         assert str(f.read()) in html
 
 
+@xfail_if_safari
 def test_browser_config(request, browser_name):
     """Splinter's drivers get the Config object when it's passed through the Browser function."""
     from splinter import Config

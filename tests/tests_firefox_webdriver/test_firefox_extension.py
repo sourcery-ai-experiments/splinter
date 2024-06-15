@@ -25,8 +25,6 @@ def test_firefox_create_instance_with_extension(request, browser):
 
     The dummy extension should add a red border to any web page.
     """
-    request.addfinalizer(browser.quit)
-
     browser.visit(EXAMPLE_APP)
 
     elem = browser.find_by_css("body")
